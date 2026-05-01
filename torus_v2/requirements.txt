@@ -1,0 +1,31 @@
+# ── Web framework ─────────────────────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+
+# ── Crypto ────────────────────────────────────────────────────────────────────
+cryptography>=42.0.0
+tinyec>=0.4.0           # deterministic ECC scalar mult (k × G)
+
+# ── Database (async SQLAlchemy) ───────────────────────────────────────────────
+sqlalchemy[asyncio]>=2.0.30
+aiosqlite>=0.20.0       # dev/test backend (SQLite)
+asyncpg>=0.29.0         # production backend (PostgreSQL)
+
+# ── Cache / replay prevention ─────────────────────────────────────────────────
+redis>=5.0.4            # redis.asyncio replaces deprecated aioredis
+
+# ── Rate limiting ─────────────────────────────────────────────────────────────
+slowapi>=0.1.9
+
+# ── Observability ─────────────────────────────────────────────────────────────
+structlog>=24.1.0
+prometheus-fastapi-instrumentator>=6.1.0
+opentelemetry-sdk>=1.24.0
+opentelemetry-instrumentation-fastapi>=0.45b0
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest>=8.2.0
+pytest-asyncio>=0.23.0
+httpx>=0.27.0

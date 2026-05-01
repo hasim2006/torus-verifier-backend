@@ -1,0 +1,31 @@
+{
+  "_comment": "Cross-team validation vectors. Client and server MUST produce identical output for every field.",
+  "_source": "PRD v1.0 §4.2 worked example — Alice authenticating",
+  "vector_001": {
+    "R": [87, 23, 56, 91, 42, 15, 78, 34, 69, 50],
+    "C": {
+      "nonce"    : "0x3A7F9B2E",
+      "timestamp": "2026-02-07 10:30:00",
+      "device_id": "laptop_mac_address_hash",
+      "entropy"  : "0x8C4D"
+    },
+    "seeds": {
+      "alpha": "seed_for_start",
+      "beta" : "seed_for_length",
+      "gamma": "seed_for_direction"
+    },
+    "expected": {
+      "S"    : 2,
+      "L"    : 7,
+      "delta": 1,
+      "D"    : [56, 91, 42, 15, 78, 34, 69],
+      "k_star": "TODO: compute from actual SHA-256 implementation",
+      "k"    : "TODO: k_star mod curve_order",
+      "P"    : {
+        "x": "TODO: k * G on secp256r1",
+        "y": "TODO: k * G on secp256r1"
+      }
+    },
+    "_note": "TODO fields must be filled in by the crypto team using the reference implementation before any client/server merge."
+  }
+}

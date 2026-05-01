@@ -1,0 +1,77 @@
+openapi: "3.1.0"
+info:
+  title: TORUS Verifier API
+  version: "1.0.0"
+  description: >
+    Server-side verifier for the Cyclic Projection Authentication system.
+    See VERIFICATION_REPORT.md for full gap analysis and implementation plan.
+
+paths:
+  /api/v1/challenge:
+    get:
+      summary: Issue a fresh authentication challenge
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+        - name: device_id
+          in: query
+          required: true
+          schema: { type: string, minLength: 8, maxLength: 128 }
+      responses:
+        "200":
+          description: Challenge issued
+          content:
+            application/json:
+              schema:
+                properties:
+                  challenge_id : { type: string, format: uuid }
+                  nonce        : { type: string, pattern: "^[0-9a-f]{64}$" }
+                  timestamp    : { type: string, format: date-time }
+                  device_id    : { type: string }
+                  entropy      : { type: string, pattern: "^[0-9a-f]{8}$" }
+                  ring_version : { type: integer, minimum: 0 }
+        "429": { description: Rate limit exceeded }
+
+  /api/v1/authenticate:
+    post:
+      summary: Submit authentication point P for verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required: [challenge_id, user_id, p_x, p_y, ring_version]
+              properties:
+                challenge_id : { type: string, format: uuid }
+                user_id      : { type: string, format: uuid }
+                p_x          : { type: string, pattern: "^[0-9a-f]{64}$" }
+                p_y          : { type: string, pattern: "^[0-9a-f]{64}$" }
+                ring_version : { type: integer, minimum: 0 }
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                properties:
+                  success     : { type: boolean }
+                  new_version : { type: integer }
+        "401": { description: VERIFICATION_FAILED }
+        "409": { description: REPLAY_DETECTED or VERSION_DESYNC }
+        "422": { description: CONTEXT_EXPIRED, INVALID_SCALAR, or CLOCK_SKEW }
+        "429": { description: Rate limit exceeded }
+
+  /api/v1/health:
+    get:
+      summary: Liveness probe
+      responses:
+        "200": { description: Service alive }
+
+  /api/v1/ready:
+    get:
+      summary: Readiness probe — checks DB and Redis connectivity
+      responses:
+        "200": { description: All dependencies reachable }
+        "503": { description: Dependency unavailable }
