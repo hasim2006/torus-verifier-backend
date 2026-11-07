@@ -8,16 +8,16 @@ Cyclic Projection Authentication System — scalable, API-only backend verifier.
 
 | Area | v1 (original) | v2 (this release) |
 |---|---|---|
-| `scalar_mult` | ❌ returned a **random** public key (silent bug) | ✅ correct `k × G` via tinyec |
-| Redis | ❌ commented-out stubs / in-memory fallbacks | ✅ fully wired (challenge store + replay cache) |
-| Database | ❌ in-memory dict | ✅ async SQLAlchemy (SQLite dev / PostgreSQL prod) |
-| Config | ❌ hardcoded values | ✅ pydantic-settings / `.env` |
-| Rate limiting | ❌ commented out | ✅ wired via slowapi |
-| Enrollment | ❌ missing entirely | ✅ `POST /api/v1/enroll` |
-| `/ready` probe | ❌ stub | ✅ pings Redis + DB, returns 503 on failure |
-| Route errors | ❌ tuple returns (Flask-style, broken in FastAPI) | ✅ `HTTPException` throughout |
-| Docker | ❌ none | ✅ `Dockerfile` + `docker-compose.yml` |
-| Metrics | ❌ not wired | ✅ Prometheus at `/metrics` |
+| `scalar_mult` |  returned a **random** public key (silent bug) |  correct `k × G` via tinyec |
+| Redis |  commented-out stubs / in-memory fallbacks |  fully wired (challenge store + replay cache) |
+| Database |  in-memory dict |  async SQLAlchemy (SQLite dev / PostgreSQL prod) |
+| Config |  hardcoded values |  pydantic-settings / `.env` |
+| Rate limiting |  commented out |  wired via slowapi |
+| Enrollment |  missing entirely |  `POST /api/v1/enroll` |
+| `/ready` probe |  stub |  pings Redis + DB, returns 503 on failure |
+| Route errors |  tuple returns (Flask-style, broken in FastAPI) |  `HTTPException` throughout |
+| Docker |  none |  `Dockerfile` + `docker-compose.yml` |
+| Metrics |  not wired |  Prometheus at `/metrics` |
 
 ---
 
@@ -62,7 +62,7 @@ torus_backend/
 │   │   ├── replay_cache.py    # Redis-backed nonce cache
 │   │   ├── derive_params.py   # S, L, δ derivation
 │   │   └── versioning.py      # v / v-1 fallback, desync detection
-│   ├── crypto/                # ⚠ MUST match client crypto/ exactly
+│   ├── crypto/                #  MUST match client crypto/ exactly
 │   │   ├── hash.py
 │   │   ├── ecc.py             # FIXED: scalar_mult now correct
 │   │   ├── projection.py
@@ -98,8 +98,8 @@ Issue a fresh authentication challenge.
 
 | Param | In | Required | Description |
 |---|---|---|---|
-| `user_id` | query | ✅ | UUID of the user |
-| `device_id` | query | ✅ | Bound device identifier |
+| `user_id` | query |  | UUID of the user |
+| `device_id` | query |  | Bound device identifier |
 
 **Response 200**
 ```json
